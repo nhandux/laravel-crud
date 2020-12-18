@@ -34,6 +34,13 @@
             </tr>
             </tbody>
         </table>
+        <Pagination 
+            :maxVisibleButtons="3"
+            :totalPages="dataSearch.totalPages"
+            :total="dataSearch.total"
+            :currentPage="dataSearch.page"
+            @pagechanged="pagechanged"
+        />
         <modal name="my-first-modal">
             <code>
                 npm install --save vue-js-modal <br />
@@ -49,6 +56,7 @@
 
 <script>
     import SearchBook from './partials/SearchBook';
+    import Pagination from './partials/Pagination';
     import Loading from 'vue-loading-overlay';
     import 'vue-loading-overlay/dist/vue-loading.css';
 
@@ -56,22 +64,38 @@
         data() {
             return {
                 books: [],
-                isLoading: true
+                isLoading: true,
+                dataSearch: {
+                    keywords: '',
+                    totalPages: 0,
+                    total: 0,
+                    page: 1
+                }
             }
         },
         components: {
             Loading,
-            SearchBook
+            SearchBook,
+            Pagination
         },
         created() {
-            this.axios
-                .get('/api/books')
-                .then(response => { 
-                    this.isLoading = false;
-                    this.books = response.data;
-                });
+            this.callApi();
         },
         methods: {
+            callApi () {
+                this.isLoading = true;
+                this.axios
+                .get('/api/books', {params: this.dataSearch})
+                .then(response => { 
+                    this.dataSearch = {
+                        ...this.dataSearch,
+                        totalPages: response.data.last_page,
+                        total: response.data.total
+                    }
+                    this.isLoading = false;
+                    this.books = response.data.data;
+                });
+            },
             deleteBook(id) {
                 this.isLoading = true;
                 this.axios
@@ -92,13 +116,8 @@
               console.log('User cancelled the loader.')
             },
             searchBook (keywords) {
-                this.isLoading = true;
-                this.axios
-                .get('/api/books?keywords=' + keywords)
-                .then(response => { 
-                    this.isLoading = false;
-                    this.books = response.data;
-                });
+                this.dataSearch.keywords = keywords;
+                this.callApi();
             },
             show () {
                 this.$modal.show('my-first-modal');
@@ -112,6 +131,13 @@
                     title: 'Important message',
                     text: 'Hello user! This is a notification!'
                 });
+            },
+            pagechanged (page) {
+                this.dataSearch = {
+                    ...this.dataSearch,
+                    page: page
+                };
+                this.callApi();
             }
         }
     }

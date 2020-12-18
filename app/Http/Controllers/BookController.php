@@ -14,11 +14,15 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
+        $paged = !empty($request->paged) ? $request->paged : 2;
+
         $books = Book::when(!empty($request->keywords), function ($query) use ($request) {
                         $query->where('name', 'like', '%' . $request->keywords . '%');
                     })
-                    ->get()->toArray();
-        return array_reverse($books);
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($paged);
+
+        return $books;
     }
 
     /**

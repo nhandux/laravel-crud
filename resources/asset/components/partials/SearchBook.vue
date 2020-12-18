@@ -4,10 +4,12 @@
             <div class="form-group">
                 <input type="keywords" placeholder="Keyword" v-model="keywords" class="form-control" id="search">
             </div>
+            &nbsp;
             <button type="submit" class="btn btn-default">{{title}}</button>
         </form>
     </div>
 </template>
+
 <script>
     export default {
         props: {

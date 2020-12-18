@@ -4,6 +4,7 @@
         <span class="text-secondary">Laravel & Vue</span>
     </div>
 </template>
+
 <script>
     export default {}
 </script>
