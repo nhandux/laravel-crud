@@ -2030,7 +2030,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -2077,25 +2076,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.isLoading = true;
       this.axios["delete"]("/api/books/".concat(id)).then(function (response) {
-        var i = _this2.books.map(function (item) {
-          return item.id;
-        }).indexOf(id);
+        // let i = this.books.map(item => item.id).indexOf(id); 
+        // this.books.splice(i, 1);
+        if (_this2.books.length == 1 && _this2.dataSearch.page > 1) {
+          _this2.dataSearch = _objectSpread(_objectSpread({}, _this2.dataSearch), {}, {
+            page: _this2.dataSearch.page - 1
+          });
+        }
 
-        _this2.books.splice(i, 1);
-
-        _this2.isLoading = false;
+        _this2.callApi();
       });
-    },
-    doAjax: function doAjax() {
-      var _this3 = this;
-
-      this.isLoading = true;
-      setTimeout(function () {
-        _this3.isLoading = false;
-      }, 5000);
-    },
-    onCancel: function onCancel() {
-      console.log('User cancelled the loader.');
     },
     searchBook: function searchBook(keywords) {
       this.dataSearch.keywords = keywords;
@@ -2301,11 +2291,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    maxVisibleButtons: {
-      type: Number,
-      required: false,
-      "default": 3
-    },
     totalPages: {
       type: Number,
       required: true
@@ -2332,21 +2317,10 @@ __webpack_require__.r(__webpack_exports__);
     isInLastPage: function isInLastPage() {
       return this.currentPage === this.totalPages;
     },
-    startPage: function startPage() {
-      if (this.currentPage === 1) {
-        return 1;
-      }
-
-      if (this.currentPage === this.totalPages) {
-        return this.totalPages - this.maxVisibleButtons;
-      }
-
-      return this.currentPage - 1;
-    },
     pages: function pages() {
       var range = [];
 
-      for (var i = this.startPage; i <= parseInt(this.totalPages); i += 1) {
+      for (var i = 1; i <= parseInt(this.totalPages); i += 1) {
         range.push({
           name: i
         });
@@ -20905,7 +20879,6 @@ var render = function() {
       _vm._v(" "),
       _c("Pagination", {
         attrs: {
-          maxVisibleButtons: 3,
           totalPages: _vm.dataSearch.totalPages,
           total: _vm.dataSearch.total,
           currentPage: _vm.dataSearch.page
@@ -20964,17 +20937,17 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("ID")]),
+        _c("th", { attrs: { width: "5%" } }, [_vm._v("ID")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
+        _c("th", { attrs: { width: "15%" } }, [_vm._v("Name")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Author")]),
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Author")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Created At")]),
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Created At")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Updated At")]),
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Updated At")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Actions")])
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Actions")])
       ])
     ])
   }
@@ -21262,7 +21235,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: { click: _vm.onClickPreviousPage }
               },
-              [_vm._v("Prev ")]
+              [_vm._v("Prev")]
             )
           ]
         ),
@@ -21322,48 +21295,60 @@ var render = function() {
                 "button",
                 {
                   staticClass: "page-link",
-                  on: { click: _vm.onClickFirstPage }
+                  on: { click: _vm.onClickLastPage }
                 },
                 [_vm._v(_vm._s(_vm.totalPages))]
               )
             ])
           : _vm._e(),
         _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c(
-            "button",
-            {
-              staticClass: "page-link",
-              attrs: { type: "button", disabled: _vm.isInLastPage },
-              on: { click: _vm.onClickNextPage }
-            },
-            [_vm._v("Next")]
-          )
-        ]),
+        _c(
+          "li",
+          { staticClass: "page-item", attrs: { disabled: _vm.isInLastPage } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "page-link",
+                attrs: { type: "button" },
+                on: { click: _vm.onClickNextPage }
+              },
+              [_vm._v("Next")]
+            )
+          ]
+        ),
         _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c(
-            "button",
-            {
-              staticClass: "page-link",
-              attrs: { type: "button", disabled: _vm.isInLastPage },
-              on: { click: _vm.onClickLastPage }
-            },
-            [_c("i", { staticClass: "fa fa-angle-right" })]
-          )
-        ]),
+        _c(
+          "li",
+          { staticClass: "page-item", attrs: { disabled: _vm.isInLastPage } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "page-link",
+                attrs: { type: "button" },
+                on: { click: _vm.onClickLastPage }
+              },
+              [_c("i", { staticClass: "fa fa-angle-right" })]
+            )
+          ]
+        ),
         _vm._v(" "),
-        _c("li", { staticClass: "page-item" }, [
-          _c(
-            "button",
-            {
-              staticClass: "page-link",
-              attrs: { type: "button", disabled: _vm.isInLastPage },
-              on: { click: _vm.onClickLastPage }
-            },
-            [_c("i", { staticClass: "fa fa-angle-double-right" })]
-          )
-        ])
+        _c(
+          "li",
+          { staticClass: "page-item", attrs: { disabled: _vm.isInLastPage } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "page-link",
+                attrs: { type: "button" },
+                on: { click: _vm.onClickLastPage }
+              },
+              [_c("i", { staticClass: "fa fa-angle-double-right" })]
+            )
+          ]
+        )
       ],
       2
     )

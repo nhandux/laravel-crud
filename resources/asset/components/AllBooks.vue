@@ -6,12 +6,12 @@
             <loading :active.sync="isLoading" :is-full-page="false"></loading>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Author</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th>Actions</th>
+                    <th width="5%">ID</th>
+                    <th width="15%">Name</th>
+                    <th width="20%">Author</th>
+                    <th width="20%">Created At</th>
+                    <th width="20%">Updated At</th>
+                    <th width="20%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +35,6 @@
             </tbody>
         </table>
         <Pagination 
-            :maxVisibleButtons="3"
             :totalPages="dataSearch.totalPages"
             :total="dataSearch.total"
             :currentPage="dataSearch.page"
@@ -101,19 +100,16 @@
                 this.axios
                     .delete(`/api/books/${id}`)
                     .then(response => {
-                        let i = this.books.map(item => item.id).indexOf(id); 
-                        this.books.splice(i, 1)
-                        this.isLoading = false;
+                        // let i = this.books.map(item => item.id).indexOf(id); 
+                        // this.books.splice(i, 1);
+                        if(this.books.length == 1 && this.dataSearch.page > 1) {
+                            this.dataSearch = {
+                                ...this.dataSearch,
+                                page: this.dataSearch.page - 1
+                            }
+                        }
+                        this.callApi();
                     });
-            },
-            doAjax() {
-                this.isLoading = true;
-                setTimeout(() => {
-                  this.isLoading = false
-                },5000)
-            },
-            onCancel() {
-              console.log('User cancelled the loader.')
             },
             searchBook (keywords) {
                 this.dataSearch.keywords = keywords;

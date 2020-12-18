@@ -8,7 +8,7 @@
                 <button class="page-link" @click="onClickFirstPage" > <i class="fa fa-angle-left"></i> </button>
             </li>
             <li class="page-item" :disabled="isInFirstPage">
-                <button class="page-link" type="button" @click="onClickPreviousPage">Prev </button>
+                <button class="page-link" type="button" @click="onClickPreviousPage">Prev</button>
             </li>
             <li class="page-item" v-if="(currentPage > 3)">
                 <button class="page-link" @click="onClickFirstPage" >1</button>
@@ -25,14 +25,14 @@
             <li class="page-item" v-if="(currentPage < totalPages - 2)">
                 <button class="page-link" @click="onClickLastPage" >{{totalPages}}</button>
             </li>
-            <li class="page-item">
-                <button class="page-link" type="button" @click="onClickNextPage" :disabled="isInLastPage">Next</button>
+            <li class="page-item" :disabled="isInLastPage">
+                <button class="page-link" type="button" @click="onClickNextPage">Next</button>
             </li>
-            <li class="page-item">
-                <button class="page-link" type="button" @click="onClickLastPage" :disabled="isInLastPage"> <i class="fa fa-angle-right"></i> </button>
+            <li class="page-item" :disabled="isInLastPage">
+                <button class="page-link" type="button" @click="onClickLastPage"> <i class="fa fa-angle-right"></i> </button>
             </li>
-            <li class="page-item">
-                <button class="page-link" type="button" @click="onClickLastPage" :disabled="isInLastPage"> <i class="fa fa-angle-double-right"></i> </button>
+            <li class="page-item" :disabled="isInLastPage">
+                <button class="page-link" type="button" @click="onClickLastPage"> <i class="fa fa-angle-double-right"></i> </button>
             </li>
         </ul>
     </nav>
@@ -41,11 +41,6 @@
 <script>
 export default {
     props: {
-        maxVisibleButtons: {
-            type: Number,
-            required: false,
-            default: 3
-        },
         totalPages: {
             type: Number,
             required: true
@@ -72,26 +67,16 @@ export default {
         isInLastPage() {
             return this.currentPage === this.totalPages;
         },
-        startPage() {
-            if (this.currentPage === 1) {
-                return 1;
-            }
-            if (this.currentPage === this.totalPages) {
-                return this.totalPages - this.maxVisibleButtons;
-            }
-            return this.currentPage - 1;
-        },
         pages() {
             const range = [];
-
-            for (let i = this.startPage;
+            for (let i = 1;
                 i <= parseInt(this.totalPages);
                 i+= 1 ) {
                     range.push({
                     name: i,
                 });
             }
-
+            
             return range;
         },
     },
