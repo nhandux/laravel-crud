@@ -105,6 +105,7 @@
                         if(this.books.length == 1 && this.dataSearch.page > 1) {
                             this.dataSearch = {
                                 ...this.dataSearch,
+                                totalPages: this.dataSearch.totalPages - 1,
                                 page: this.dataSearch.page - 1
                             }
                         }

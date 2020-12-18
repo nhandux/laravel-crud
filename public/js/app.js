@@ -2080,6 +2080,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         // this.books.splice(i, 1);
         if (_this2.books.length == 1 && _this2.dataSearch.page > 1) {
           _this2.dataSearch = _objectSpread(_objectSpread({}, _this2.dataSearch), {}, {
+            totalPages: _this2.dataSearch.totalPages - 1,
             page: _this2.dataSearch.page - 1
           });
         }
